@@ -179,6 +179,30 @@ public:
         }
     }
 
+    // ========== INTERCHANGE SORT ==========
+    void interchangeSort(Laptop* arr, int n, int tieuChi) {
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = i + 1; j < n; j++) {
+                bool swap = false;
+
+                if (tieuChi == 1) // Giá cao -> thấp
+                    swap = arr[i].price < arr[j].price;
+                else if (tieuChi == 2) // Số lượng bán cao -> thấp
+                    swap = arr[i].sold < arr[j].sold;
+                else if (tieuChi == 3) // Điểm thấp -> cao
+                    swap = arr[i].rating > arr[j].rating;
+                else if (tieuChi == 4) // Tên A -> Z
+                    swap = arr[i].name > arr[j].name;
+
+                if (swap) {
+                    Laptop temp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = temp;
+                }
+            }
+        }
+    }
+
     // ========== INSERTION SORT ==========
     void insertionSort(Laptop* arr, int n, int tieuChi) {
         for (int i = 1; i < n; i++) {
@@ -323,24 +347,25 @@ public:
     void testThuatToan(int tieuChi, string tenTieuChi) {
         cout << "\n========== Test: " << tenTieuChi << " ==========\n";
 
-        string tenThuatToan[] = { "Bubble Sort", "Selection Sort", "Insertion Sort", "Quick Sort", "Merge Sort" };
-        double tongThoiGian[5] = { 0, 0, 0, 0, 0 };
+        string tenThuatToan[] = { "Bubble Sort", "Selection Sort", "Interchange Sort", "Insertion Sort", "Quick Sort", "Merge Sort" };
+        double tongThoiGian[6] = { 0, 0, 0, 0, 0, 0 };
 
         // Chạy 5 lần mỗi thuật toán
         for (int lan = 0; lan < 5; lan++) {
             cout << "Lan chay " << (lan + 1) << "...\n";
 
             // Test từng thuật toán
-            for (int thuat = 0; thuat < 5; thuat++) {
+            for (int thuat = 0; thuat < 6; thuat++) {
                 Laptop* temp = saoChep();
 
                 auto start = chrono::high_resolution_clock::now();
 
                 if (thuat == 0) bubbleSort(temp, soLuong, tieuChi);
                 else if (thuat == 1) selectionSort(temp, soLuong, tieuChi);
-                else if (thuat == 2) insertionSort(temp, soLuong, tieuChi);
-                else if (thuat == 3) quickSort(temp, soLuong, tieuChi);
-                else if (thuat == 4) mergeSort(temp, soLuong, tieuChi);
+                else if (thuat == 2) interchangeSort(temp, soLuong, tieuChi);
+                else if (thuat == 3) insertionSort(temp, soLuong, tieuChi);
+                else if (thuat == 4) quickSort(temp, soLuong, tieuChi);
+                else if (thuat == 5) mergeSort(temp, soLuong, tieuChi);
 
                 auto end = chrono::high_resolution_clock::now();
                 chrono::duration<double, milli> duration = end - start;
@@ -354,7 +379,7 @@ public:
         // Hiển thị kết quả
         cout << "\nKet qua trung binh (5 lan):\n";
         cout << string(40, '-') << endl;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             cout << setw(20) << tenThuatToan[i] << ": "
                 << fixed << setprecision(2) << (tongThoiGian[i] / 5.0) << " ms" << endl;
         }
